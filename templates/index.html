@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz Despacho Flores (Dark Mode)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+
+                        header_bg: '#544843',
+                        filter_bar_bg: '#5a6165',
+                        main_bg: '#2d3133',
+                        btn_usuario_bg: '#394347',
+                        btn_filtro_bg: '#3e4346',
+                        input_bg: '#3f4345',
+                        text_light: '#d6d6d6',
+                        text_secondary: '#7c8083',
+                        logo_box_bg: '#cec4be',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#242728] min-h-screen font-sans m-0 p-10 flex justify-center text-text_light">
+
+    <div class="w-full max-w-7xl flex flex-col shadow-2xl">
+
+        <header class="bg-header_bg px-8 py-6 flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <div class="w-48 h-20 border border-text_secondary relative bg-logo_box_bg">
+                    <svg class="absolute inset-0 w-full h-full text-[#7c7c7c]" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" stroke-width="1"></line>
+                        <line x1="100" y1="0" x2="0" y2="100" stroke="currentColor" stroke-width="1"></line>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-light text-text_light tracking-[0.2em]">Despacho Flores</h1>
+            </div>
+
+            <button class="bg-btn_usuario_bg px-12 py-3 text-sm font-medium text-text_light shadow">
+                Usuario
+            </button>
+        </header>
+
+        <div class="bg-filter_bar_bg px-16 py-8 flex items-center gap-16">
+            <button class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow">Filtro</button>
+            <button class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow">Filtro</button>
+            <button class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow">Filtro</button>
+            <button class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow">Filtro</button>
+        </div>
+
+        <main class="flex-1 bg-main_bg p-10">
+            <div class="flex items-start gap-8 mt-4">
+                <div class="bg-btn_filtro_bg px-4 py-3 w-32 h-16 flex items-center text-sm text-text_light leading-tight shadow">
+                    Filtro<br>Custom
+                </div>
+
+                <div class="bg-input_bg px-5 py-2 w-36 h-10 flex items-center text-sm text-text_secondary shadow-inner">
+                    palabra
+                </div>
+
+                <div class="bg-input_bg px-5 py-2 w-36 h-10 flex items-center text-sm text-text_secondary shadow-inner">
+                    valor
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+</body>
+</html>
