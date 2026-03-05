@@ -1,4 +1,21 @@
 from flask import Flask, render_template
+import os
+import pdfplumber
+from pathlib import Path
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app = Flask(__name__)
