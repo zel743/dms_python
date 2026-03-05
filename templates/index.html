@@ -10,7 +10,6 @@
             theme: {
                 extend: {
                     colors: {
-
                         header_bg: '#544843',
                         filter_bar_bg: '#5a6165',
                         main_bg: '#2d3133',
@@ -41,34 +40,125 @@
                 <h1 class="text-3xl font-light text-text_light tracking-[0.2em]">Despacho Flores</h1>
             </div>
 
-            <button class="bg-btn_usuario_bg px-12 py-3 text-sm font-medium text-text_light shadow">
+            <button class="bg-btn_usuario_bg px-12 py-3 text-sm font-medium text-text_light shadow hover:bg-gray-500 transition">
                 Usuario
             </button>
         </header>
 
         <div class="bg-filter_bar_bg px-16 py-8 flex items-center gap-16">
-            <button class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow">Filtro</button>
-            <button class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow">Filtro</button>
-            <button class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow">Filtro</button>
-            <button class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow">Filtro</button>
+            <button onclick="ejecutarBusqueda('penal')" class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow hover:bg-gray-600 transition">Penal</button>
+            <button onclick="ejecutarBusqueda('civil')" class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow hover:bg-gray-600 transition">Civil</button>
+            <button onclick="ejecutarBusqueda('laboral')" class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow hover:bg-gray-600 transition">Laboral</button>
+            <button onclick="ejecutarBusqueda('amparo')" class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow hover:bg-gray-600 transition">Amparo</button>
         </div>
 
         <main class="flex-1 bg-main_bg p-10">
             <div class="flex items-start gap-8 mt-4">
-                <div class="bg-btn_filtro_bg px-4 py-3 w-32 h-16 flex items-center text-sm text-text_light leading-tight shadow">
-                    Filtro<br>Custom
-                </div>
+                
+                <button onclick="ejecutarBusquedaCustom()" class="bg-btn_filtro_bg px-4 py-3 w-32 h-16 flex items-center text-sm text-text_light leading-tight shadow hover:bg-gray-600 transition text-left">
+                    Buscar<br>Custom
+                </button>
 
-                <input type="text" class="bg-input_bg px-5 py-2 w-36 h-10 flex items-center text-sm text-text_secondary shadow-inner" placeholder="palabra" />
-                <input type="text" placeholder="valor" class="bg-input_bg px-5 py-2 w-36 h-10 flex items-center text-sm text-text_secondary shadow-inner"/>
-
-
-
-
+                <input id="inputPalabra" type="text" onkeypress="verificarEnter(event)" class="bg-input_bg px-5 py-2 w-36 h-10 flex items-center text-sm text-white shadow-inner focus:outline-none focus:ring-1 focus:ring-gray-400" placeholder="palabra" />
+                <button onclick="limpiarTodo()" class="bg-btn_usuario_bg hover:bg-red-900/60 px-6 py-2 h-10 flex items-center text-sm text-white shadow transition-colors border border-gray-600">
+                    Limpiar
+                </button>
             </div>
+
+            <div id="resultadosDiv" class="mt-10"></div>
         </main>
 
     </div>
 
+    <script>
+        function limpiarTodo() {
+            document.getElementById('inputPalabra').value = '';
+            
+            document.getElementById('resultadosDiv').innerHTML = '';
+        }
+        function verificarEnter(event) {
+            if (event.key === "Enter") {
+                ejecutarBusquedaCustom();
+            }
+        }
+
+        function ejecutarBusquedaCustom() {
+            const palabraCustom = document.getElementById('inputPalabra').value.trim();
+            if (palabraCustom) {
+                ejecutarBusqueda(palabraCustom);
+            } else {
+                document.getElementById('resultadosDiv').innerHTML = '<p class="text-red-400">Por favor, escribe una palabra en el filtro custom.</p>';
+            }
+        }
+
+        async function ejecutarBusqueda(palabra) {
+            const resultadosDiv = document.getElementById('resultadosDiv');
+            resultadosDiv.innerHTML = `<p class="text-yellow-400">Buscando archivos con "${palabra}", por favor espera...</p>`;
+            
+            try {
+                const respuesta = await fetch('/buscar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ palabra: palabra })
+                });
+                
+                const datos = await respuesta.json();
+                
+                if (datos.error) {
+                    resultadosDiv.innerHTML = `<p class="text-red-400">${datos.error}</p>`;
+                    return;
+                }
+                
+                if (datos.resultados.length === 0) {
+                    resultadosDiv.innerHTML = `<p class="text-gray-400">No se encontraron PDFs con la palabra "${palabra}".</p>`;
+                    return;
+                }
+                
+                let html = `<p class="mb-4 text-green-400">✓ Se encontraron ${datos.resultados.length} PDFs con "${palabra}":</p>`;
+                html += '<div class="space-y-3">';
+                
+                datos.resultados.forEach(pdf => {
+                    const rutaSegura = pdf.ruta.split('\\').join('\\\\');
+                    
+                    html += `
+                        <div class="bg-filter_bar_bg p-4 shadow flex justify-between items-center group">
+                            <div class="flex-1 overflow-hidden pr-4">
+                                <p class="font-bold text-white text-lg">${pdf.nombre}</p>
+                                <p class="text-sm text-gray-300 mt-1 truncate" title="${pdf.ruta}">${pdf.ruta}</p>
+                                <p class="text-xs text-gray-400 mt-1">Tamaño: ${pdf.tamaño} KB</p>
+                            </div>
+                            <button onclick="abrirArchivo('${rutaSegura}')" class="bg-btn_usuario_bg hover:bg-gray-400 px-6 py-2 text-sm text-white shadow transition-colors shrink-0 border border-gray-600">
+                                Abrir PDF
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                resultadosDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultadosDiv.innerHTML = '<p class="text-red-400">Ocurrió un error de conexión con el servidor.</p>';
+            }
+        }
+
+        async function abrirArchivo(rutaCompleta) {
+            try {
+                const respuesta = await fetch('/abrir', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ruta: rutaCompleta })
+                });
+                
+                const datos = await respuesta.json();
+                
+                if (datos.error) {
+                    alert('Error al abrir: ' + datos.error);
+                }
+            } catch (error) {
+                alert('Hubo un error de conexión al intentar abrir el archivo.');
+            }
+        }
+    </script>
 </body>
 </html>
