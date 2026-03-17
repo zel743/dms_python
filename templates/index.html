@@ -10,57 +10,62 @@
             theme: {
                 extend: {
                     colors: {
-                        header_bg: '#544843',
-                        filter_bar_bg: '#5a6165',
-                        main_bg: '#2d3133',
+                        header_bg: '#0c0a09',
+                        filter_bar_bg: '#4C4B48',
+                        main_bg: '#E5E5E5',
                         btn_usuario_bg: '#394347',
-                        btn_filtro_bg: '#3e4346',
+                        btn_filtro_bg: '#E5E5E5',
                         input_bg: '#3f4345',
                         text_light: '#d6d6d6',
                         text_secondary: '#oklch(14.1% 0.005 285.823)',
                         logo_box_bg: '#cec4be',
+                        text_b: '#0c0a09',
+                        btn_custom: ''
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-[#242728] min-h-screen font-sans m-0 p-10 flex justify-center text-text_light">
+<body class="bg-[#242728] min-h-screen font-serif italic m-0 p-10 flex justify-center text-text_light">
 
     <div class="w-full max-w-7xl flex flex-col shadow-2xl">
 
         <header class="bg-header_bg px-8 py-6 flex items-center justify-between">
             <div class="flex items-center gap-6">
-                <div class="w-48 h-20 border border-text_secondary relative bg-logo_box_bg">
-                    <svg class="absolute inset-0 w-full h-full text-[#7c7c7c]" preserveAspectRatio="none" viewBox="0 0 100 100">
-                        <line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" stroke-width="1"></line>
-                        <line x1="100" y1="0" x2="0" y2="100" stroke="currentColor" stroke-width="1"></line>
-                    </svg>
-                </div>
-                <h1 class="text-3xl font-light text-text_light tracking-[0.2em]">Despacho Flores</h1>
+                <!-- aqui va el logo-->
+            <div class="w-35 h-20 border border-text_secondary relative bg-logo_box_bg">
+                <img 
+                src="/static/logo_oficial.png" 
+                alt="Logo" 
+                class="w-full h-full object-contain"
+                />
+            </div>
+                <!-- aqui termina la secion edel logo-->
+                <h1 class="text-3xl font-serif italic text-text_light tracking-[0.2em]">Despacho Flores</h1>
             </div>
 
-            <button class="bg-btn_usuario_bg px-12 py-3 text-sm font-medium text-text_light shadow hover:bg-gray-500 transition">
+            <button class="bg-btn_usuario_bg rounded-md px-12 py-3 text-sm font-medium text-text_light shadow hover:bg-gray-500 transition">
                 Usuario
             </button>
         </header>
 
-        <div class="bg-filter_bar_bg px-16 py-8 flex items-center gap-16">
-            <button onclick="ejecutarBusqueda('penal')" class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow hover:bg-gray-600 transition">Penal</button>
-            <button onclick="ejecutarBusqueda('civil')" class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow hover:bg-gray-600 transition">Civil</button>
-            <button onclick="ejecutarBusqueda('laboral')" class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow hover:bg-gray-600 transition">Laboral</button>
-            <button onclick="ejecutarBusqueda('amparo')" class="bg-btn_filtro_bg px-4 py-2 w-32 text-center text-sm text-text_light shadow hover:bg-gray-600 transition">Amparo</button>
+        <div class="font-serif italic bg-filter_bar_bg px-16 py-8 flex items-center gap-5 justify-center">
+            <button onclick="ejecutarBusqueda('penal')" class="bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Penal</button>
+            <button onclick="ejecutarBusqueda('civil')" class="bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Civil</button>
+            <button onclick="ejecutarBusqueda('laboral')" class="bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Laboral</button>
+            <button onclick="ejecutarBusqueda('amparo')" class="bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Amparo</button>
         </div>
 
         <main class="flex-1 bg-main_bg p-10">
-            <div class="flex items-start gap-8 mt-4">
+            <div class="flex items-center justify-center gap-8 mt-4 ">
                 
-                <button onclick="ejecutarBusquedaCustom()" class="bg-btn_filtro_bg px-4 py-3 w-32 h-16 flex items-center text-sm text-text_light leading-tight shadow hover:bg-gray-600 transition text-left">
-                    Buscar<br>Custom
+                <button onclick="ejecutarBusquedaCustom()" class="bg-btn_usuario_bg rounded-lg px-4 py-3 w-15 h-10 flex items-center text-sm text-text_light leading-tight shadow hover:bg-gray-500 transition text-left">
+                    Buscar 
                 </button>
 
-                <input id="inputPalabra" type="text" onkeypress="verificarEnter(event)" class="bg-input_bg px-5 py-2 w-36 h-10 flex items-center text-sm text-white shadow-inner focus:outline-none focus:ring-1 focus:ring-gray-400" placeholder="palabra" />
-                <button onclick="limpiarTodo()" class="bg-btn_usuario_bg hover:bg-red-900/60 px-6 py-2 h-10 flex items-center text-sm text-white shadow transition-colors border border-gray-600">
+                <input id="inputPalabra" type="text" onkeypress="verificarEnter(event)" class="bg-input_bg rounded-lg px-5 py-2 w-36 h-10 flex items-center text-sm text-white shadow-inner focus:outline-none focus:ring-1 focus:ring-gray-400" placeholder="Palabra Clave" />
+                <button onclick="limpiarTodo()" class="bg-btn_usuario_bg rounded-lg hover:bg-gray-500 px-6 py-2 h-10 flex items-center text-sm text-white shadow transition-colors border border-gray-600">
                     Limpiar
                 </button>
             </div>
@@ -93,7 +98,7 @@
 
         async function ejecutarBusqueda(palabra) {
             const resultadosDiv = document.getElementById('resultadosDiv');
-            resultadosDiv.innerHTML = `<p class="text-yellow-400">Buscando archivos con "${palabra}", por favor espera...</p>`;
+            resultadosDiv.innerHTML = `<p class="text-black">Buscando archivos con "${palabra}", por favor espera...</p>`;
             
             try {
                 const respuesta = await fetch('/buscar', {
@@ -110,11 +115,11 @@
                 }
                 
                 if (datos.resultados.length === 0) {
-                    resultadosDiv.innerHTML = `<p class="text-gray-400">No se encontraron PDFs con la palabra "${palabra}".</p>`;
+                    resultadosDiv.innerHTML = `<p class="text-black">No se encontraron PDFs con la palabra "${palabra}".</p>`;
                     return;
                 }
                 
-                let html = `<p class="mb-4 text-green-400">✓ Se encontraron ${datos.resultados.length} PDFs con "${palabra}":</p>`;
+                let html = `<p class="mb-4 text-black">✓ Se encontraron ${datos.resultados.length} PDFs con "${palabra}":</p>`;
                 html += '<div class="space-y-3">';
                 
                 datos.resultados.forEach(pdf => {
@@ -138,7 +143,7 @@
                 resultadosDiv.innerHTML = html;
                 
             } catch (error) {
-                resultadosDiv.innerHTML = '<p class="text-red-400">Ocurrió un error de conexión con el servidor.</p>';
+                resultadosDiv.innerHTML = '<p class="text-red-600">Ocurrió un error de conexión con el servidor.</p>';
             }
         }
 
