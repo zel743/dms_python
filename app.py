@@ -67,4 +67,4 @@ def abrir_navegador():
 
 if __name__ == '__main__':
     Timer(1, abrir_navegador).start()
-    app.run(debug=False)
+    app.run(debug=True)
