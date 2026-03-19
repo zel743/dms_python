@@ -51,10 +51,10 @@
         </header>
 
         <div class="font-serif italic bg-filter_bar_bg px-16 py-8 flex items-center gap-5 justify-center">
-            <button onclick="ejecutarBusqueda('penal')" class="bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Penal</button>
-            <button onclick="ejecutarBusqueda('civil')" class="bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Civil</button>
-            <button onclick="ejecutarBusqueda('laboral')" class="bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Laboral</button>
-            <button onclick="ejecutarBusqueda('amparo')" class="bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Amparo</button>
+            <button onclick="toggleFiltro(this, 'penal')" class="filtro-btn bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Penal</button>
+            <button onclick="toggleFiltro(this, 'civil')" class="filtro-btn bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Civil</button>
+            <button onclick="toggleFiltro(this, 'laboral')" class="filtro-btn bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Laboral</button>
+            <button onclick="toggleFiltro(this, 'amparo')" class="filtro-btn bg-btn_filtro_bg rounded-full px-4 py-2 w-32 text-center text-sm text-text_b shadow hover:bg-gray-600 transition">Amparo</button>
         </div>
 
         <main class="flex-1 bg-main_bg p-10">
@@ -77,22 +77,73 @@
 
     <script>
         function limpiarTodo() {
+            // Borra la caja de texto y los resultados
             document.getElementById('inputPalabra').value = '';
-            
             document.getElementById('resultadosDiv').innerHTML = '';
+            
+            // Borra la memoria y apaga los botones visualmente
+            filtroActivo = "";
+            document.querySelectorAll('.filtro-btn').forEach(b => {
+                b.classList.remove('bg-gray-400', 'border-white', 'text-white');
+                b.classList.add('border-transparent');
+            });
         }
         function verificarEnter(event) {
             if (event.key === "Enter") {
                 ejecutarBusquedaCustom();
             }
         }
+        
+
+        let filtroActivo = "";
+
+        function toggleFiltro(boton, palabra) {
+            const botones = document.querySelectorAll('.filtro-btn');
+            
+            if (filtroActivo === palabra) {
+                filtroActivo = "";
+                boton.classList.remove('bg-gray-400', 'border-white', 'text-white');
+                boton.classList.add('border-transparent');
+            } else {
+                botones.forEach(b => {
+                    b.classList.remove('bg-gray-400', 'border-white', 'text-white');
+                    b.classList.add('border-transparent');
+                });
+                
+                filtroActivo = palabra;
+                boton.classList.remove('border-transparent');
+                boton.classList.add('bg-gray-400', 'border-white', 'text-white');
+            }
+            
+            ejecutarBusquedaCombinada();
+        }
 
         function ejecutarBusquedaCustom() {
+            ejecutarBusquedaCombinada();
+        }
+
+        function ejecutarBusquedaCombinada() {
             const palabraCustom = document.getElementById('inputPalabra').value.trim();
-            if (palabraCustom) {
-                ejecutarBusqueda(palabraCustom);
+            let busquedaFinal = "";
+            
+            if (filtroActivo && palabraCustom) {
+                busquedaFinal = filtroActivo + " " + palabraCustom; // Suma ambos
+            } else if (filtroActivo) {
+                busquedaFinal = filtroActivo; // Solo el botón de arriba
+            } else if (palabraCustom) {
+                busquedaFinal = palabraCustom; // Solo el input de abajo
             } else {
-                document.getElementById('resultadosDiv').innerHTML = '<p class="text-red-400">Por favor, escribe una palabra en el filtro custom.</p>';
+                document.getElementById('resultadosDiv').innerHTML = '<p class="text-red-400">Por favor selecciona un filtro o escribe una palabra.</p>';
+                return;
+            }
+            
+            ejecutarBusqueda(busquedaFinal);
+        }
+
+        // Permite buscar presionando "Enter" en el input
+        function verificarEnter(event) {
+            if (event.key === "Enter") {
+                ejecutarBusquedaCustom();
             }
         }
 
@@ -104,7 +155,7 @@
                 const respuesta = await fetch('/buscar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ palabra: palabra })
+                    body: JSON.stringify({ palabra: palabra }),
                 });
                 
                 const datos = await respuesta.json();

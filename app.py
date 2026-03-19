@@ -12,22 +12,24 @@ def resolver_ruta(ruta_relativa):
 
 app = Flask(__name__, template_folder=resolver_ruta('templates'))
 
-def buscar_pdfs_optimizado(carpeta_raiz, palabra):
-    palabra_clave = palabra.lower()
+def buscar_pdfs_optimizado(carpeta_raiz, busqueda):
+    palabras_clave = busqueda.lower().split()
     archivos_encontrados = []
     
     for directorio_actual, subdirectorios, archivos in os.walk(carpeta_raiz):
         subdirectorios[:] = [d for d in subdirectorios if not d.startswith('.') and d not in ['AppData', 'node_modules', 'venv', '$Recycle.Bin']]
         
         for archivo in archivos:
-            if archivo.lower().endswith('.pdf') and palabra_clave in archivo.lower():
-                ruta_completa = Path(directorio_actual) / archivo
+            if archivo.lower().endswith('.pdf'):
                 
-                archivos_encontrados.append({
-                    "nombre": archivo,
-                    "ruta": str(ruta_completa),
-                    "tamaño": round(ruta_completa.stat().st_size / 1024, 1)
-                })
+                if all(palabra in archivo.lower() for palabra in palabras_clave):
+                    ruta_completa = Path(directorio_actual) / archivo
+                    
+                    archivos_encontrados.append({
+                        "nombre": archivo,
+                        "ruta": str(ruta_completa),
+                        "tamaño": round(ruta_completa.stat().st_size / 1024, 1)
+                    })
                 
     return archivos_encontrados
 
