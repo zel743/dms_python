@@ -10,7 +10,7 @@ def resolver_ruta(ruta_relativa):
         return os.path.join(sys._MEIPASS, ruta_relativa)
     return os.path.join(os.path.abspath("."), ruta_relativa)
 
-app = Flask(__name__, template_folder=resolver_ruta('templates'))
+app = Flask(__name__, template_folder=resolver_ruta('templates'), static_folder=resolver_ruta('static'))
 
 def buscar_pdfs_optimizado(carpeta_raiz, busqueda):
     palabras_clave = busqueda.lower().split()
